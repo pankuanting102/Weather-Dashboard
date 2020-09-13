@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
+</head>
+<body>
+    
+    <div class="container-fluid">
+    <div class="row top-banner type-1">
+        <div>Weather Dashboard</div>
+    </div>
+    <section class="row">
+    <aside class="col-12 col-md-3 col-sm-12">
+        <div class="search" i>
+            <lable>Search for a City</lable>
+            <div>
+            <input></input>
+           <button><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
+            <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+          </svg></button>
+            </div>
+        </div>
+    </aside>
+    <main class="col-12 col-md-9 col-sm-12" >
+        <div class="main-top col-md-12 col-12 col-sm-12" id="current-weather">
+        </div>
+        <div class="row col-sm-12 col-12" id="forecast-module">
+            <!-- <div class="forecast" id="forecast-1">
+                <div id="date-1">Date</div>
+                <div id="current-temp" data-city-name="city-temp">Temp:</div>
+                <div id="current-humidity" data-city-name="city-name">Humidity:</div> -->
+                     
+        </div>
+        
+        
+        
+        
+    </main>
+    </section>
+    </div>
+
+    <script type="text/javascript">
+      $("button").on("click", function() {
+        var cityName = $("input").val()
+        var queryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" +
+          cityName + "&appid=dba9fba66cd4f9dffd4e3bf4d8e74bfb";
+
+                           
+        $.ajax({
+          url: queryURL,
+          method: "GET"
+        }).then(function(response) {
+
+            $("#forecast-module").text("")
+
+            // Get Forecast Info
+            // Loop for 5 days
+            for(var i=0; i<response.list.length; i+=8){
+            var futureDate = response.list[i].dt_txt
+            var futureTemp = response.list[i].main.temp
+            var tempConvert = (futureTemp - 273.15) * 1.80 + 32
+            var currentHumidity = response.list[i].main.humidity
+
+            var forecastModule = $("<div>").html(futureDate  + ("</br>Temp: " + parseInt(tempConvert)  + "°F") + ( "</br>Humidity: " + currentHumidity + "%"))
+            forecastModule.addClass("forecast")
+            $("#forecast-module").append(forecastModule)
+
+        }
+           
+        $("#current-weather").text(cityName)
+      
+        });
+
+        
+    
+
+      });
+     </script>
+</body>
+</html>
+
+
+
+<!-- $("#cityname").text(cityNameDisplay + " " + response.list[0].dt_txt )
+$("#date-1").text(response.list[0].dt_txt)
+$("#current-temp").attr("city-temp", tempConvert)
+$("#current-temp").text("Temp: " + parseInt(tempConvert) + "°F")
+$("#current-humidity").text("Humidity: " + currentHumidity + "%") -->
+
+
