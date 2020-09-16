@@ -79,8 +79,15 @@ function displayCurrentWeather (){
 
             $("#current-weather").append(currentCity, currentTemp ,currentHumidity, currentWindSpeed)
             currentCity.addClass("title")
-            currentTemp.attr("id", "currentTemp")
-            localStorage.setItem("currentTemp", currentTemp.text() )
+            var storageCurrentData = {
+                city: currentCity.text(),
+                temp: currentTemp.text(),
+                humidity: currentHumidity.text(),
+                wind: currentWindSpeed.text(),
+
+            };
+
+            localStorage.setItem("current-data", JSON.stringify(storageCurrentData));
       });
 }
 
@@ -109,9 +116,17 @@ function displayCurrentWeather (){
 
             var forecastModule = $("<div>").html(futureDate  + ("</br>Temp: " + parseInt(tempConvert)  + "°F") + ( "</br>Humidity: " + currentHumidity + "%"))
             forecastModule.addClass("forecast")
-            forecastModule.attr("id", "forecast-module")
+            forecastModule.attr("id", "forecast-module"+i)
             $("#forecast-module").append(forecastModule)
-                     
+
+            var storageForecastData = {
+                date: futureDate,
+                temp: tempConvert,
+                humidity: currentHumidity,
+
+            }
+
+            localStorage.setItem("forecast-module"+i, $("#forecast-module"+i).text())
         }
   
       });
@@ -122,6 +137,7 @@ function displayCurrentWeather (){
     function displayHistory () {
         var cityHistory = $("<div>").text($("input").val())
         cityHistory.addClass("history-title")
+        cityHistory.attr("value", cityHistory)
             
         $("#search-history").append(cityHistory)
         
@@ -151,10 +167,22 @@ function displayCurrentWeather (){
 
        })
 
+    // When Click on Search History 
+
+    
+        $(this).click(function(){
+            
+            
+        })
+        
+    
+
 
     // When Refresh Page
 
     function renderHistroy () {
+
+        // Render Search History
         
         var storeCityHistory = JSON.parse(localStorage.getItem("history-search-city-name"));
        
@@ -172,9 +200,32 @@ function displayCurrentWeather (){
        
         }
 
+        // Render Current Weather
+        var getStoragedCurrentWeather = JSON.parse(localStorage.getItem("current-data"))
+        var currentDay = moment().format("(YYYY/MM/DD)")
+            var currentCity = $("<div>").text(getStoragedCurrentWeather.city)
+            var humidity = getStoragedCurrentWeather.humidity
+            var temp = getStoragedCurrentWeather.temp
+            var windSpeed = getStoragedCurrentWeather.wind
+            
+            var currentTemp = $("<div>").text(temp)
+            var currentHumidity = $("<div>").text(humidity)
+            var currentWindSpeed = $("<div>").text(windSpeed)
+        $("#current-weather").append(currentCity, currentTemp ,currentHumidity, currentWindSpeed)
+            currentCity.addClass("title")
        
-       
+        // Render Forecast 
+        for ( var i =0; i<33; i+=8){
+            var getForecastStorageData = localStorage.getItem("forecast-module"+i)
+        var forecastModule = $("<div>").text(getForecastStorageData)
+            forecastModule.addClass("forecast")
+            forecastModule.attr("id", "forecast-module"+i)
+            $("#forecast-module").append(forecastModule)
+
+
+        }
         
+
         
     }
     
