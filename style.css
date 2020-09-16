@@ -5,7 +5,7 @@
 }
 aside{
 background-color: #F8F9FA;
-height: 100vh;
+height: 90vh;
 }
 
 main{
@@ -60,4 +60,37 @@ button{
 
 .search{
     margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.title{
+    font-size: 36px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.history-title{
+    font-size: 14px;
+    color: #000000;
+    text-transform: capitalize;
+    padding: 20px;
+    border-top: 1px solid #dfdfdf;
+    
+    
+    
+}
+
+.search-history{
+    margin-top: 20px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #dfdfdf;
+    border-left: 1px solid #dfdfdf;
+    border-right: 1px solid #dfdfdf;
+}
+
+.five-day{
+font-size: 24px;
+font-weight: bold;
+margin-top: 20px;
+
 }

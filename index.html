@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     
 </head>
 <body>
@@ -18,7 +19,7 @@
     </div>
     <section class="row">
     <aside class="col-12 col-md-3 col-sm-12">
-        <div class="search" i>
+        <div class="search">
             <lable>Search for a City</lable>
             <div>
             <input></input>
@@ -27,16 +28,14 @@
             <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
           </svg></button>
             </div>
+        <div class="search-history" id="search-history">
         </div>
     </aside>
     <main class="col-12 col-md-9 col-sm-12" >
         <div class="main-top col-md-12 col-12 col-sm-12" id="current-weather">
         </div>
         <div class="row col-sm-12 col-12" id="forecast-module">
-            <!-- <div class="forecast" id="forecast-1">
-                <div id="date-1">Date</div>
-                <div id="current-temp" data-city-name="city-temp">Temp:</div>
-                <div id="current-humidity" data-city-name="city-name">Humidity:</div> -->
+            <div id="forecast-card"></div> 
                      
         </div>
         
@@ -48,11 +47,50 @@
     </div>
 
     <script type="text/javascript">
-      $("button").on("click", function() {
+    
+// Storage History Data
+
+var historyData = []
+
+
+// Get Current Weather
+
+function displayCurrentWeather (){
+
+    var cityName = $("input").val()
+        var currentQueryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=4c023acf398932e1b43cd03002ad8542"
+        
+                           
+        $.ajax({
+          url: currentQueryURL,
+          method: "GET"
+        }).then(function(response) {
+            $("#current-weather").text("")
+            var currentDay = moment().format("(YYYY/MM/DD)")
+            var currentCity = $("<div>").text(cityName + " " + currentDay)
+            var humidity = response.main.humidity
+            var temp = response.main.temp
+            var windSpeed = response.wind.speed
+            var tempConvert = (temp - 273.15) * 1.80 + 32
+            var currentTemp = $("<div>").text("Temperture: " + parseInt(tempConvert) + "°F")
+            var currentHumidity = $("<div>").text("Humidity: " + humidity + "%")
+            var currentWindSpeed = $("<div>").text("Wind Speed: " + windSpeed + "MPH")
+            
+
+            $("#current-weather").append(currentCity, currentTemp ,currentHumidity, currentWindSpeed)
+            currentCity.addClass("title")
+            currentTemp.attr("id", "currentTemp")
+            localStorage.setItem("currentTemp", currentTemp.text() )
+      });
+}
+
+    // Get Forecast Info
+        function displayForecastCard (){
+
         var cityName = $("input").val()
         var queryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" +
           cityName + "&appid=dba9fba66cd4f9dffd4e3bf4d8e74bfb";
-
+        
                            
         $.ajax({
           url: queryURL,
@@ -61,7 +99,7 @@
 
             $("#forecast-module").text("")
 
-            // Get Forecast Info
+            
             // Loop for 5 days
             for(var i=0; i<response.list.length; i+=8){
             var futureDate = response.list[i].dt_txt
@@ -71,28 +109,96 @@
 
             var forecastModule = $("<div>").html(futureDate  + ("</br>Temp: " + parseInt(tempConvert)  + "°F") + ( "</br>Humidity: " + currentHumidity + "%"))
             forecastModule.addClass("forecast")
+            forecastModule.attr("id", "forecast-module")
             $("#forecast-module").append(forecastModule)
-
+                     
         }
-           
-        $("#current-weather").text(cityName)
-      
-        });
+  
+      });
+
+    }
+
+    // Append City Name to History
+    function displayHistory () {
+        var cityHistory = $("<div>").text($("input").val())
+        cityHistory.addClass("history-title")
+            
+        $("#search-history").append(cityHistory)
+        
+        historyData.push(cityHistory.text())
+       console.log(historyData)
+       storeHistoryCityName()
+
+       }
+    //    Storage City Name
+    function storeHistoryCityName() {
+        localStorage.setItem("history-search-city-name", JSON.stringify(historyData))
+
+    }
+    
+
+    
+    // When Search Clicked
+    
+       $(function(){
+        $("button").click(function(){
+            displayCurrentWeather();
+            displayForecastCard();
+            displayHistory();
+            storeHistoryCityName()
+            
+        })
+
+       })
+
+
+    // When Refresh Page
+
+    function renderHistroy () {
+        
+        var storeCityHistory = JSON.parse(localStorage.getItem("history-search-city-name"));
+       
+
+            if (storeCityHistory !== null){
+                historyData=storeCityHistory
+                
+            }
+            
+            for (var i =0; i < storeCityHistory.length; i++){
+           var cityHistory = $("<div>").text(storeCityHistory[i]);
+            $("#search-history").append(cityHistory)
+            cityHistory.addClass("history-title")
+        
+       
+        }
+
+       
+       
+        
+        
+    }
+    
+    
+    renderHistroy ()
+    
+    
+
+ 
+    
+    
+    
+       
+
+        
+  
 
         
     
 
-      });
+     
      </script>
 </body>
 </html>
 
-
-
-<!-- $("#cityname").text(cityNameDisplay + " " + response.list[0].dt_txt )
-$("#date-1").text(response.list[0].dt_txt)
-$("#current-temp").attr("city-temp", tempConvert)
-$("#current-temp").text("Temp: " + parseInt(tempConvert) + "°F")
-$("#current-humidity").text("Humidity: " + currentHumidity + "%") -->
 
 
