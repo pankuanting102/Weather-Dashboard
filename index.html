@@ -110,17 +110,18 @@ function displayCurrentWeather (){
             // Loop for 5 days
             for(var i=0; i<response.list.length; i+=8){
             var futureDate = response.list[i].dt_txt
+            var dateOnly = futureDate.substr(0,10)
             var futureTemp = response.list[i].main.temp
             var tempConvert = (futureTemp - 273.15) * 1.80 + 32
             var currentHumidity = response.list[i].main.humidity
 
-            var forecastModule = $("<div>").html(futureDate  + ("</br>Temp: " + parseInt(tempConvert)  + "°F") + ( "</br>Humidity: " + currentHumidity + "%"))
+            var forecastModule = $("<div>").html(dateOnly  + ("</br>Temp: " + parseInt(tempConvert)  + "°F") + ( "</br>Humidity: " + currentHumidity + "%"))
             forecastModule.addClass("forecast")
             forecastModule.attr("id", "forecast-module"+i)
             $("#forecast-module").append(forecastModule)
 
             var storageForecastData = {
-                date: futureDate,
+                date: dateOnly,
                 temp: tempConvert,
                 humidity: currentHumidity,
 
