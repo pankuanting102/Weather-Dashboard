@@ -125,56 +125,56 @@ function displayCurrentWeather (){
     
 
 
-    // When Refresh Page
+    // // When Refresh Page
 
-    function renderHistroy () {
+    // function renderHistroy () {
 
-        // Render Search History
+    //     // Render Search History
         
-        var storeCityHistory = JSON.parse(localStorage.getItem("history-search-city-name"));
+    //     var storeCityHistory = JSON.parse(localStorage.getItem("history-search-city-name"));
        
 
-            if (storeCityHistory !== null){
-                historyData=storeCityHistory
+    //         if (storeCityHistory !== null){
+    //             historyData=storeCityHistory
                 
-            }
+    //         }
             
-            for (var i =0; i < storeCityHistory.length; i++){
-           var cityHistory = $("<div>").text(storeCityHistory[i]);
-            $("#search-history").append(cityHistory)
-            cityHistory.addClass("history-title")
+    //         for (var i =0; i < storeCityHistory.length; i++){
+    //        var cityHistory = $("<div>").text(storeCityHistory[i]);
+    //         $("#search-history").append(cityHistory)
+    //         cityHistory.addClass("history-title")
         
        
-        }
+    //     }
 
-        // Render Current Weather
-        var getStoragedCurrentWeather = JSON.parse(localStorage.getItem("current-data"))
-        var currentDay = moment().format("(YYYY/MM/DD)")
-            var currentCity = $("<div>").text(getStoragedCurrentWeather.city)
-            var humidity = getStoragedCurrentWeather.humidity
-            var temp = getStoragedCurrentWeather.temp
-            var windSpeed = getStoragedCurrentWeather.wind
+    //     // Render Current Weather
+    //     var getStoragedCurrentWeather = JSON.parse(localStorage.getItem("current-data"))
+    //     var currentDay = moment().format("(YYYY/MM/DD)")
+    //         var currentCity = $("<div>").text(getStoragedCurrentWeather.city)
+    //         var humidity = getStoragedCurrentWeather.humidity
+    //         var temp = getStoragedCurrentWeather.temp
+    //         var windSpeed = getStoragedCurrentWeather.wind
             
-            var currentTemp = $("<div>").text(temp)
-            var currentHumidity = $("<div>").text(humidity)
-            var currentWindSpeed = $("<div>").text(windSpeed)
-        $("#current-weather").append(currentCity, currentTemp ,currentHumidity, currentWindSpeed)
-            currentCity.addClass("title")
+    //         var currentTemp = $("<div>").text(temp)
+    //         var currentHumidity = $("<div>").text(humidity)
+    //         var currentWindSpeed = $("<div>").text(windSpeed)
+    //     $("#current-weather").append(currentCity, currentTemp ,currentHumidity, currentWindSpeed)
+    //         currentCity.addClass("title")
        
-        // Render Forecast 
-        for ( var i =0; i<33; i+=8){
-            var getForecastStorageData = localStorage.getItem("forecast-module"+i)
-        var forecastModule = $("<div>").text(getForecastStorageData)
-            forecastModule.addClass("forecast")
-            forecastModule.attr("id", "forecast-module"+i)
-            $("#forecast-module").append(forecastModule)
+    //     // Render Forecast 
+    //     for ( var i =0; i<33; i+=8){
+    //         var getForecastStorageData = localStorage.getItem("forecast-module"+i)
+    //     var forecastModule = $("<div>").text(getForecastStorageData)
+    //         forecastModule.addClass("forecast")
+    //         forecastModule.attr("id", "forecast-module"+i)
+    //         $("#forecast-module").append(forecastModule)
 
 
-        }
+    //     }
         
 
         
-    }
+    // }
     
     
-    renderHistroy ()
+    // renderHistroy ()
