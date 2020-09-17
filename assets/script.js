@@ -61,6 +61,104 @@ function displayCurrentWeather (){
       });
 }
 
+
+function displayHistoryWeather (e){
+
+    var cityName = e
+        var currentQueryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=166a433c57516f51dfab1f7edaed8413"
+        
+                           
+        $.ajax({
+          url: currentQueryURL,
+          method: "GET"
+        }).then(function(response) {
+            $("#current-weather").text("")
+            var currentDay = moment().format("(YYYY/MM/DD)")
+            var currentCity = $("<div>").text(cityName + " " + currentDay)
+            var humidity = response.main.humidity
+            var temp = response.main.temp
+            var windSpeed = response.wind.speed
+            var weather = response.weather[0].main
+            var currentWeather = $("<img>")
+            if(weather === "Clouds"){
+                currentWeather.attr("src", "http://openweathermap.org/img/wn/02d@2x.png")
+            }
+            else if (weather === "Snow"){
+                currentWeather.attr("src", "http://openweathermap.org/img/wn/13d@2x.png")
+            }
+
+            else if (weather === "Rain"){
+
+                currentWeather.attr("src", "http://openweathermap.org/img/wn/09d@2x.png")
+                
+            }
+
+            else {
+                currentWeather.attr("src", "http://openweathermap.org/img/wn/01d@2x.png")
+            }
+            
+            var tempConvert = (temp - 273.15) * 1.80 + 32
+            var currentTemp = $("<div>").text("Temperture: " + parseInt(tempConvert) + "°F")
+            var currentHumidity = $("<div>").text("Humidity: " + humidity + "%")
+            var currentWindSpeed = $("<div>").text("Wind Speed: " + windSpeed + "MPH")
+            console.log(response.weather[0].main)
+
+            $("#current-weather").append(currentCity, currentWeather, currentTemp, currentHumidity, currentWindSpeed)
+            currentCity.addClass("title")
+            var storageCurrentData = {
+                city: currentCity.text(),
+                temp: currentTemp.text(),
+                humidity: currentHumidity.text(),
+                wind: currentWindSpeed.text(),
+                weather: response.weather[0].main
+
+            };
+
+            localStorage.setItem("current-data", JSON.stringify(storageCurrentData));
+      });
+}
+
+function displayHistoryForecastCard (e){
+
+    var cityName = e
+    var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" +
+      cityName + "&appid=166a433c57516f51dfab1f7edaed8413";
+    
+                       
+    $.ajax({
+      url: queryURL,
+      method: "GET"
+    }).then(function(response) {
+
+        $("#forecast-module").text("")
+
+        
+        // Loop for 5 days
+        for(var i=0; i<response.list.length; i+=8){
+        var futureDate = response.list[i].dt_txt
+        var dateOnly = futureDate.substr(0,10)
+        var futureTemp = response.list[i].main.temp
+        var tempConvert = (futureTemp - 273.15) * 1.80 + 32
+        var currentHumidity = response.list[i].main.humidity
+
+        var forecastModule = $("<div>").html(dateOnly  + ("</br>Temp: " + parseInt(tempConvert)  + "°F") + ( "</br>Humidity: " + currentHumidity + "%"))
+        forecastModule.addClass("forecast")
+        forecastModule.attr("id", "forecast-module"+i)
+        $("#forecast-module").append(forecastModule)
+
+        var storageForecastData = {
+            date: dateOnly,
+            temp: tempConvert,
+            humidity: currentHumidity,
+
+        }
+
+        localStorage.setItem("forecast-module"+i, $("#forecast-module"+i).text())
+    }
+
+  });
+
+}
     // Get Forecast Info
         function displayForecastCard (){
 
@@ -108,7 +206,7 @@ function displayCurrentWeather (){
     function displayHistory () {
         var cityHistory = $("<div>").text($("input").val())
         cityHistory.addClass("history-title")
-        cityHistory.attr("value", cityHistory)
+        cityHistory.attr("id", "history-btn")
             
         $("#search-history").append(cityHistory)
         
@@ -139,10 +237,11 @@ function displayCurrentWeather (){
        })
 
     // When Click on Search History 
-  
-       
-
-    
+    $( "#search-history" ).delegate( "div", "click", function() {
+        var cityName = $(this).text();
+        displayHistoryWeather (cityName);
+        displayHistoryForecastCard (cityName);
+      });
 
 
     // When Refresh Page

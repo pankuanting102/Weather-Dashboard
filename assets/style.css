@@ -81,6 +81,11 @@ button{
     
 }
 
+.history-title:hover{
+    background-color: #F8F9FA;
+    cursor: pointer;
+}
+
 .search-history{
     margin-top: 20px;
     background-color: #ffffff;
