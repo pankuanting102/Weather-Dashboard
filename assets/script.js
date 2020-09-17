@@ -21,19 +21,39 @@ function displayCurrentWeather (){
             var humidity = response.main.humidity
             var temp = response.main.temp
             var windSpeed = response.wind.speed
+            var weather = response.weather[0].main
+            var currentWeather = $("<img>")
+            if(weather === "Clouds"){
+                currentWeather.attr("src", "http://openweathermap.org/img/wn/02d@2x.png")
+            }
+            else if (weather === "Snow"){
+                currentWeather.attr("src", "http://openweathermap.org/img/wn/13d@2x.png")
+            }
+
+            else if (weather === "Rain"){
+
+                currentWeather.attr("src", "http://openweathermap.org/img/wn/09d@2x.png")
+                
+            }
+
+            else {
+                currentWeather.attr("src", "http://openweathermap.org/img/wn/01d@2x.png")
+            }
+            
             var tempConvert = (temp - 273.15) * 1.80 + 32
             var currentTemp = $("<div>").text("Temperture: " + parseInt(tempConvert) + "°F")
             var currentHumidity = $("<div>").text("Humidity: " + humidity + "%")
             var currentWindSpeed = $("<div>").text("Wind Speed: " + windSpeed + "MPH")
-            
+            console.log(response.weather[0].main)
 
-            $("#current-weather").append(currentCity, currentTemp ,currentHumidity, currentWindSpeed)
+            $("#current-weather").append(currentCity, currentWeather, currentTemp, currentHumidity, currentWindSpeed)
             currentCity.addClass("title")
             var storageCurrentData = {
                 city: currentCity.text(),
                 temp: currentTemp.text(),
                 humidity: currentHumidity.text(),
                 wind: currentWindSpeed.text(),
+                weather: response.weather[0].main
 
             };
 
@@ -154,11 +174,30 @@ function displayCurrentWeather (){
             var humidity = getStoragedCurrentWeather.humidity
             var temp = getStoragedCurrentWeather.temp
             var windSpeed = getStoragedCurrentWeather.wind
-            
+            var weather=getStoragedCurrentWeather.weather
             var currentTemp = $("<div>").text(temp)
             var currentHumidity = $("<div>").text(humidity)
             var currentWindSpeed = $("<div>").text(windSpeed)
-        $("#current-weather").append(currentCity, currentTemp ,currentHumidity, currentWindSpeed)
+            var currentWeather = $("<img>")
+
+            if(weather === "Clouds"){
+                currentWeather.attr("src", "http://openweathermap.org/img/wn/02d@2x.png")
+            }
+            else if (weather === "Snow"){
+                currentWeather.attr("src", "http://openweathermap.org/img/wn/13d@2x.png")
+            }
+
+            else if (weather === "Rain"){
+
+                currentWeather.attr("src", "http://openweathermap.org/img/wn/09d@2x.png")
+                
+            }
+
+            else {
+                currentWeather.attr("src", "http://openweathermap.org/img/wn/01d@2x.png")
+            }
+            
+        $("#current-weather").append(currentCity, currentWeather, currentTemp, currentHumidity, currentWindSpeed)
             currentCity.addClass("title")
        
         // Render Forecast 

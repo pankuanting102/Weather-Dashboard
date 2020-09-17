@@ -5,7 +5,7 @@
 }
 aside{
 background-color: #F8F9FA;
-height: 90vh;
+height: 100vh;
 }
 
 main{
@@ -64,6 +64,7 @@ button{
 }
 
 .title{
+    padding-top: 10px;
     font-size: 36px;
     font-weight: bold;
     text-transform: capitalize;
